@@ -2,7 +2,7 @@ name: Deploy to Production
 
 on: # yamllint disable-line rule:truthy
   release:
-    types: [published]
+    types: [released]
   workflow_dispatch:
   repository_dispatch:
     types: [deploy-to-prod]
