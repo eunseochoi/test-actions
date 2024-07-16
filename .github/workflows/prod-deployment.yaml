@@ -15,21 +15,5 @@ jobs:
   check:
     if: "!github.event.release.prerelease"
     name: Check Task Protection
-    uses: moment-technology/actions/.github/workflows/check-task-protection-status.yml@check-task-protection-v1
-    with:
-      environment: prod
-      account-id: "058172190304"
-      skip_check: ${{ github.event.inputs.skip_check }}
-    secrets: inherit
-  deployment:
-    if: "!github.event.release.prerelease"
-    name: Run Deployment
-    uses: moment-technology/actions/.github/workflows/common-ecs-deploy.yml@common-ecs-deploy-v1
-    needs: check
-    with:
-      environment: prod
-      account-id: "058172190304"
-      latest-tag: latest-prod
-      service: test-actions
-      image: moment-technology/test-actions
-    secrets: inherit
+    run: |
+        echo "running test check protection"
