@@ -2,6 +2,7 @@ name: Scheduled Full Release
 
 on:
   workflow_call:
+  workflow_dispatch:
     inputs:
       repository:
         description: "The repository to promote the latest pre-release to a full release"
