@@ -12,8 +12,12 @@ on: # yamllint disable-line rule:truthy
         type: boolean
 
 jobs:
-  check:
+  promote-release:
     if: "!github.event.release.prerelease"
-    name: Check Task Protection
-    run: |
-        echo "running test check protection"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check Local Time
+      id: no-op
+      run: |
+          echo "running test check protection"
