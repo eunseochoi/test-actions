@@ -4,6 +4,8 @@ on: # yamllint disable-line rule:truthy
   release:
     types: [published]
   workflow_dispatch:
+  repository_dispatch:
+    types: [deploy-to-prod]
     inputs:
       skip_check:
         description: "Set to true to skip the task protection check. WARNING! If there is a task with active protection, then this will trigger an infinite scale! Check with #eng-data before toggling this."
@@ -13,7 +15,6 @@ on: # yamllint disable-line rule:truthy
 
 jobs:
   promote-release:
-    if: "!github.event.release.prerelease"
     runs-on: ubuntu-latest
 
     steps:
