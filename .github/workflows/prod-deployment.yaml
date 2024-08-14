@@ -20,11 +20,11 @@ jobs:
       run: |
           echo "running test job 1"
           echo "github.event_name: ${{ github.event_name }}"
-          echo "github.action: ${{ github.action }}"
+          echo "github.action: ${{ github.event.action }}"
   
   test-job-2:
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.action == 'released'
+    if: github.event_name == 'release' && github.event.action == 'released'
     steps:
     - name: Check Local Time
       # echo the current action
