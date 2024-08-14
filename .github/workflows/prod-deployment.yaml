@@ -17,7 +17,6 @@ jobs:
     if: github.event_name == 'release'
     steps:
     - name: Check Local Time
-      id: no-op
       run: |
           echo "running test job 1"
           echo "github.event_name: ${{ github.event_name }}"
@@ -25,10 +24,9 @@ jobs:
   
   test-job-2:
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.action == 'edited'
+    if: github.event_name == 'release' && github.action == 'released'
     steps:
     - name: Check Local Time
-      id: no-op
       # echo the current action
       run: |
           echo "running test job 2"
