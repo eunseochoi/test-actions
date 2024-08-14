@@ -2,10 +2,8 @@ name: Deploy to Production
 
 on: # yamllint disable-line rule:truthy
   release:
-    types: [released]
+    types: [published, released]
   workflow_dispatch:
-  repository_dispatch:
-    types: [deploy-to-prod]
     inputs:
       skip_check:
         description: "Set to true to skip the task protection check. WARNING! If there is a task with active protection, then this will trigger an infinite scale! Check with #eng-data before toggling this."
@@ -14,11 +12,20 @@ on: # yamllint disable-line rule:truthy
         type: boolean
 
 jobs:
-  promote-release:
+  test-job-1:
     runs-on: ubuntu-latest
-
+    if: github.event_name == 'release'
     steps:
     - name: Check Local Time
       id: no-op
       run: |
-          echo "running test check protection"
+          echo "running test job 1"
+  
+  test-job-2:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.action == 'released'
+    steps:
+    - name: Check Local Time
+      id: no-op
+      run: |
+          echo "running test job 2"
