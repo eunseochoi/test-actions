@@ -23,7 +23,7 @@ jobs:
   
   test-job-2:
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.action == 'released'
+    if: github.event_name == 'release' && github.action == 'edited'
     steps:
     - name: Check Local Time
       id: no-op
