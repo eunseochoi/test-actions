@@ -20,6 +20,8 @@ jobs:
       id: no-op
       run: |
           echo "running test job 1"
+          echo "github.event_name: ${{ github.event_name }}"
+          echo "github.action: ${{ github.action }}"
   
   test-job-2:
     runs-on: ubuntu-latest
@@ -27,5 +29,7 @@ jobs:
     steps:
     - name: Check Local Time
       id: no-op
+      # echo the current action
       run: |
           echo "running test job 2"
+          echo "github.action: ${{ github.action }}"
