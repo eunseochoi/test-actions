@@ -33,5 +33,5 @@ jobs:
       # echo the current action
       run: |
           echo "running test job 2"
-          echo "github.action: ${{ github.action }}"
+          echo "github.branch: ${{ github.ref }}"
 
