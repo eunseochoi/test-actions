@@ -29,12 +29,9 @@ jobs:
             repo: context.repo.repo
           });
           core.setOutput('tag_name', latestRelease.data.tag_name);
-    
-  test-job-2:
-    runs-on: ubuntu-latest
-    steps:
     - name: Fake deployment
       # echo the current action
       run: |
           echo "running test job 2"
           echo "github.action: ${{ github.action }}"
+
