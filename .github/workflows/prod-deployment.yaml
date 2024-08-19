@@ -1,8 +1,9 @@
 name: Deploy to Production
 
 on: # yamllint disable-line rule:truthy
-  release:
-    types: [published, released]
+  schedule:
+    - cron: "10 4 * * *" # 00:10 EDT
+    - cron: "10 5 * * *" # 00:10 EST
   workflow_dispatch:
     inputs:
       skip_check:
@@ -14,19 +15,25 @@ on: # yamllint disable-line rule:truthy
 jobs:
   test-job-1:
     runs-on: ubuntu-latest
-    if: github.event_name == 'release'
     steps:
-    - name: Check Local Time
-      run: |
-          echo "running test job 1"
-          echo "github.event_name: ${{ github.event_name }}"
-          echo "github.action: ${{ github.event.action }}"
-  
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Get the latest release
+      id: get_latest_release
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const latestRelease = await github.rest.repos.getLatestRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo
+          });
+          core.setOutput('tag_name', latestRelease.data.tag_name);
+    
   test-job-2:
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'released'
     steps:
-    - name: Check Local Time
+    - name: Fake deployment
       # echo the current action
       run: |
           echo "running test job 2"
