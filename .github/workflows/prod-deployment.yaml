@@ -16,9 +16,6 @@ jobs:
   test-job-1:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
     - name: Get the latest release
       id: get_latest_release
       uses: actions/github-script@v6
@@ -29,6 +26,12 @@ jobs:
             repo: context.repo.repo
           });
           core.setOutput('tag_name', latestRelease.data.tag_name);
+    
+    - name: Checkout the latest release tag
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ steps.get_latest_release.outputs.tag_name }}
+  
     - name: Fake deployment
       # echo the current action
       run: |
