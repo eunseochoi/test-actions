@@ -19,12 +19,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        fetch-tags: true
+        fetch-depth: 0  # Fetch all history for all tags and branches
 
-    - name: Check out the latest tag
-      run: |
-        git checkout $(git describe --tags `git rev-list --tags --max-count=1`)
-  
+    - name: Get latest tag
+      id: get_latest_tag
+      run: echo "LATEST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_OUTPUT
 
   test-job-2:
     runs-on: ubuntu-latest
@@ -34,5 +33,5 @@ jobs:
       # echo the current action
       run: |
           echo "running test job 2"
-          echo "github.action_ref: ${{ github.ref }} github.workflow_ref: ${{ github.workflow_ref}}"
+          echo "github.action_ref: ${{ steps.get_latest_tag.outputs.LATEST_TAG }}"
 
