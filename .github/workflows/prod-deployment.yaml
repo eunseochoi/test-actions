@@ -1,9 +1,8 @@
 name: Deploy to Production
 
 on: # yamllint disable-line rule:truthy
-  schedule:
-    - cron: "10 4 * * *" # 00:10 EDT
-    - cron: "10 5 * * *" # 00:10 EST
+  release:
+    types: [released, published]
   workflow_dispatch:
     inputs:
       skip_check:
@@ -15,7 +14,12 @@ on: # yamllint disable-line rule:truthy
 jobs:
   run-latest-tag:
     runs-on: ubuntu-latest
+    if: github.event_name == 'release' && github.event.action == 'released'
     steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0  # Fetch all history for all tags and branches 
     - name: Fake deployment
       # echo the current action
       run: |
