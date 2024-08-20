@@ -32,9 +32,13 @@ jobs:
       with:
         ref: ${{ steps.get_latest_release.outputs.tag_name }}
   
+
+  test-job-2:
+    runs-on: ubuntu-latest
+    steps:     
     - name: Fake deployment
       # echo the current action
       run: |
           echo "running test job 2"
-          echo "github.branch: ${{ github.ref }}"
+          echo "github.action_ref: ${{ github.action_ref }} github.workflow_ref: ${{ github.workflow_ref}}"
 
