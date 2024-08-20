@@ -13,29 +13,28 @@ on: # yamllint disable-line rule:truthy
         type: boolean
 
 jobs:
-  test-job-1:
+  run-latest-tag:
     runs-on: ubuntu-latest
     steps:
-    - name: Get the latest release
-      id: get_latest_release
-      uses: actions/github-script@v6
-      with:
-        script: |
-          const latestRelease = await github.rest.repos.getLatestRelease({
-            owner: context.repo.owner,
-            repo: context.repo.repo
-          });
-          core.setOutput('tag_name', latestRelease.data.tag_name);
-    
-    - name: Checkout the latest release tag
+    - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        ref: ${{ steps.get_latest_release.outputs.tag_name }}
+        fetch-tags: true
+
+    - name: Get the latest tag
+      id: get_latest_tag
+      run: |
+        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        echo "latest_tag=${latest_tag}" >> $GITHUB_ENV
+
+    - name: Check out the latest tag
+      run: |
+        git checkout ${{ env.GITHUB_ENV }}
   
 
   test-job-2:
     runs-on: ubuntu-latest
-    needs: test-job-1
+    needs: run-latest-tag
     steps:     
     - name: Fake deployment
       # echo the current action
