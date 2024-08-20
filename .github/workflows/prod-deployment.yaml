@@ -1,16 +1,8 @@
-name: Deploy to Production
+name: Run on Latest Tag
 
-on: # yamllint disable-line rule:truthy
+on:
   schedule:
-    - cron: "10 4 * * *" # 00:10 EDT
-    - cron: "10 5 * * *" # 00:10 EST
-  workflow_dispatch:
-    inputs:
-      skip_check:
-        description: "Set to true to skip the task protection check. WARNING! If there is a task with active protection, then this will trigger an infinite scale! Check with #eng-data before toggling this."
-        required: false
-        default: false
-        type: boolean
+    - cron: "0 0 * * *"  # Adjust this cron schedule as needed, currently runs daily at midnight UTC
 
 jobs:
   run-latest-tag:
@@ -19,26 +11,27 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        fetch-tags: true
+        fetch-tags: true  # Ensure all tags are fetched
+
+    - name: List all tags (for debugging)
+      run: git tag
 
     - name: Get the latest tag
       id: get_latest_tag
       run: |
-        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1` || echo "none")
+        if [ "$latest_tag" = "none" ]; then
+          echo "No tags found. Exiting..."
+          exit 0
+        fi
         echo "latest_tag=${latest_tag}" >> $GITHUB_ENV
 
     - name: Check out the latest tag
-      run: |
-        git checkout ${{ env.latest_tag }}
-  
+      if: ${{ env.latest_tag != 'none' }}
+      run: git checkout ${{ env.latest_tag }}
 
-  test-job-2:
-    runs-on: ubuntu-latest
+  deploy:
     needs: run-latest-tag
-    steps:     
-    - name: Fake deployment
-      # echo the current action
-      run: |
-          echo "running test job 2"
-          echo "github.action_ref: ${{ github.ref }} github.workflow_ref: ${{ github.workflow_ref}}"
-
+    if: ${{ github.event.env.latest_tag != 'none' && github.event_name == 'schedule' }}
+    uses: <owner>/<repo>/.github/workflows/deploy.yaml@${{ env.latest_tag }}
+    secrets: inherit
