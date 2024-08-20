@@ -33,5 +33,5 @@ jobs:
       # echo the current action
       run: |
           echo "running test job 2"
-          echo "github.action_ref: ${{ steps.get_latest_tag.outputs.LATEST_TAG }}"
+          echo "github.action_ref: $(git describe --tags --abbrev=0)"
 
