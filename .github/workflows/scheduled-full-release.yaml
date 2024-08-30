@@ -10,7 +10,7 @@ on: # yamllint disable-line rule:truthy
 jobs:
   call-scheduled-release:
     name: Promote Pre-Release at Midnight
-    uses: eunseochoi/.github/workflows/scheduled-full-release.yaml@v0.0.0
+    uses: eunseochoi/test-repo/.github/workflows/scheduled-full-release.yaml@main
     with:
       repository: "test-actions"
       start-time: "00:00"
