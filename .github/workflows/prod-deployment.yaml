@@ -12,17 +12,15 @@ on: # yamllint disable-line rule:truthy
         type: boolean
 
 jobs:
-  run-latest-tag:
+  deploy:
+    if: ${{ (github.event_name == 'release' && github.event.action == 'released') || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
-    if: github.event_name == 'release' && github.event.action == 'released'
+    name: Fake deployment
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0  # Fetch all history for all tags and branches 
-    - name: Fake deployment
-      # echo the current action
-      run: |
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Test Deployment
+        run: |
           echo "running test job 2"
           echo "github.action_ref: $(git describe --tags --abbrev=0)"
-
